@@ -10,6 +10,8 @@ class HomeController {
     const data = req.body;
     const resp = await User.create(data);
     res.json(resp);
+    const novoUser = await User.create(data);
+    res.json(novoUser);
   }
 }
 
