@@ -50,7 +50,7 @@ class UserName {
         }
 
         const newUsername = await username.update(req.body);
-        return res.json(newUsername);
+        res.json(newUsername);
       }
     } catch (e) {
       res.status(400).json({ errors: e.errors.map((err) => err.message) });
