@@ -7,11 +7,31 @@ class HomeController {
   }
 
   async store(req, res) {
-    const data = req.body;
-    const resp = await User.create(data);
-    res.json(resp);
-    const novoUser = await User.create(data);
-    res.json(novoUser);
+    try {
+      const data = req.body;
+      const resp = await User.create(data);
+      res.json(resp);
+      const novoUser = await User.create(data);
+      res.json(novoUser);
+    } catch (e) {
+      res.status(400).json({ errors: e.errors.map((err) => err.message) });
+    }
+  }
+
+  async show(req, res) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).json({
+          errors: ['ID não encontrado'],
+        });
+      }
+
+      const user = await User.findByPk(id);
+      res.json(user);
+    } catch (e) {
+      res.status(400).json({ errors: e.errors.map((err) => err.message) });
+    }
   }
 }
 

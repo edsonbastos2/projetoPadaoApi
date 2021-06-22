@@ -6,6 +6,7 @@ class UserName {
       const resp = await Username.findAll();
       res.json(resp);
     } catch (e) {
+      console.log(e);
       res.status(400).json({ errors: e.errors.map((err) => err.message) });
     }
   }
@@ -40,21 +41,40 @@ class UserName {
         res.status(400).json({
           errors: ['Id não encontrado!'],
         });
-
-        const username = await Username.findByPk(req.params.id);
-
-        if (!username) {
-          res.status(400).json({
-            errors: ['Usuário não encontrado!'],
-          });
-        }
-
-        const newUsername = await username.update(req.body);
-        res.json(newUsername);
       }
+      const username = await Username.findByPk(req.params.id);
+
+      if (!username) {
+        res.status(400).json({
+          errors: ['Usuário não encontrado!'],
+        });
+      }
+
+      const newUsername = await username.update(req.body);
+      res.json(newUsername);
     } catch (e) {
+      console.log(e);
       res.status(400).json({ errors: e.errors.map((err) => err.message) });
     }
+  }
+
+  async delete(req, res) {
+    if (!req.params.id) {
+      res.status(400).json({
+        errors: ['ID não encontrado'],
+      });
+    }
+
+    const username = await Username.findByPk(req.params.id);
+
+    if (!username) {
+      res.status(400).json({
+        errors: ['Usuário não encontrado!'],
+      });
+    }
+
+    await username.destroy();
+    res.json(null);
   }
 }
 

@@ -36,7 +36,7 @@ export default class Username extends Model {
         validate: {
           len: {
             args: [6, 255],
-            msg: 'A senha deve ter entre 6 e 255 caraxteres',
+            msg: 'A senha deve ter entre 6 e 255 caracteres',
           },
         },
       },
