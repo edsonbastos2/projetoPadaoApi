@@ -3,7 +3,7 @@ import Username from '../models/Username';
 class UserName {
   async index(req, res) {
     try {
-      const resp = await Username.findAll();
+      const resp = await Username.findAll({ attributes: ['id', 'nome', 'email'] });
       res.json(resp);
     } catch (e) {
       console.log(e);
@@ -15,7 +15,8 @@ class UserName {
     try {
       const data = req.body;
       const resp = await Username.create(data);
-      res.json(resp);
+      const { id, nome, email } = resp;
+      res.json({ id, nome, email });
     } catch (e) {
       res.status(400).json({ errors: e.errors.map((err) => err.message) });
     }
@@ -29,7 +30,8 @@ class UserName {
         });
       }
       const username = await Username.findByPk(req.params.id);
-      res.json(username);
+      const { id, nome, email } = username;
+      res.json({ id, nome, email });
     } catch (e) {
       res.status(400).json({ errors: e.errors.map((err) => err.message) });
     }
@@ -37,12 +39,7 @@ class UserName {
 
   async update(req, res) {
     try {
-      if (!req.params.id) {
-        res.status(400).json({
-          errors: ['Id não encontrado!'],
-        });
-      }
-      const username = await Username.findByPk(req.params.id);
+      const username = await Username.findByPk(req.userID);
 
       if (!username) {
         res.status(400).json({
@@ -51,7 +48,8 @@ class UserName {
       }
 
       const newUsername = await username.update(req.body);
-      res.json(newUsername);
+      const { id, nome, email } = newUsername;
+      res.json({ id, nome, email });
     } catch (e) {
       console.log(e);
       res.status(400).json({ errors: e.errors.map((err) => err.message) });
@@ -59,13 +57,7 @@ class UserName {
   }
 
   async delete(req, res) {
-    if (!req.params.id) {
-      res.status(400).json({
-        errors: ['ID não encontrado'],
-      });
-    }
-
-    const username = await Username.findByPk(req.params.id);
+    const username = await Username.findByPk(req.userID);
 
     if (!username) {
       res.status(400).json({
